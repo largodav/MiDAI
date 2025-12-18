@@ -1,11 +1,21 @@
 #Utilziando pyTelegramBotAPI (https://github.com/eternnoir/pyTelegramBotAPI)
 import os
 import telebot 
+from dotenv import load_dotenv
 
+# Cargar las variables del archivo .env
+load_dotenv()
 tokenbot = os.getenv("BOT_KEY")
 
+# Verificar si el token se cargó correctamente
+if not tokenbot:
+    raise ValueError("Error: La clave BOT_KEY no está definida en el archivo .env o no se está cargando correctamente.")
+else:
+    print(f"Token cargado correctamente")
+
+
 #Creamos el bot...
-bot = telebot.TeleBot('8517090768:AAEMGQ-42KDfY2yVan2RFeLMICq23icxYNM',parse_mode=None) 
+bot = telebot.TeleBot(tokenbot,parse_mode=None) 
 
 #Definamos un controlador de mensajes que maneje los comandos entrantes /start y /help.
 @bot.message_handler(commands=['start','help'])
