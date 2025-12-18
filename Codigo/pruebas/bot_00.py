@@ -16,6 +16,9 @@ else:
 
 #Creamos el bot...
 bot = telebot.TeleBot(tokenbot,parse_mode=None) 
+#inicilizamos la BD
+
+
 
 #Definamos un controlador de mensajes que maneje los comandos entrantes /start y /help.
 @bot.message_handler(commands=['start','help'])
