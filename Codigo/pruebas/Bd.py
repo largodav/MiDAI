@@ -1,1 +1,2 @@
-#crear BD
+#crear BD de prueba para sistema
+
