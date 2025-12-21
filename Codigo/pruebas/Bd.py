@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #crear BD
 import sqlite3
 
@@ -25,3 +26,7 @@ def init_db():
     conn.commit()
     conn.close()
     
+=======
+#crear BD de prueba para sistema
+
+>>>>>>> 42b6b383a8e04c0358850d812fcad089e3619c96

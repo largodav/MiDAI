@@ -20,6 +20,11 @@ bot = telebot.TeleBot(tokenbot,parse_mode=None)
 
 
 
+
+
+
+
+#********* MANEJADORES DE MESNSAJES DEL BOT *****************************************
 #Definamos un controlador de mensajes que maneje los comandos entrantes /start y /help.
 @bot.message_handler(commands=['start','help'])
 def send_welcome(message):
