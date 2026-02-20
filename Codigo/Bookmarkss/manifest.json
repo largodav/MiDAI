@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Sync Marcadores a Python",
+  "version": "1.0",
+  "permissions": ["bookmarks"],
+  "background": {
+    "service_worker": "background.js"
+  }
+}
+
