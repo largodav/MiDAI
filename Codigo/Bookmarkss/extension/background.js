@@ -29,8 +29,19 @@ chrome.runtime.onInstalled.addListener(() => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ marcadores: todosLosMarcadores }),
     })
-      .then((res) => res.json())
+      .then(async (res) => {
+        if (!res.ok) {
+          const body = await res.text();
+          throw new Error(`HTTP ${res.status}: ${body}`);
+        }
+        return res.json();
+      })
       .then((data) => console.log("Servidor respondió:", data))
-      .catch((err) => console.error("Error:", err));
+      .catch((err) => {
+        console.error("Error al enviar marcadores al servidor Flask:", err);
+        console.error(
+          "Verifica que http://localhost:5000/recibir_todos esté activo.",
+        );
+      });
   });
 });

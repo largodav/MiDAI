@@ -2,9 +2,14 @@
   "manifest_version": 3,
   "name": "Sync Marcadores a Python",
   "version": "1.0",
-  "permissions": ["bookmarks"],
+  "permissions": [
+    "bookmarks"
+  ],
+  "host_permissions": [
+    "http://localhost:5000/*",
+    "http://127.0.0.1:5000/*"
+  ],
   "background": {
     "service_worker": "background.js"
   }
 }
-
