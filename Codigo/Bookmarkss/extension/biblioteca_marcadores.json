@@ -6290,24 +6290,14 @@
         "dateAdded": 1769765881709
     },
     {
-        "title": "Comienza a usar el chat en VS Code",
-        "url": "https://code.visualstudio.com/docs/copilot/chat/copilot-chat",
-        "dateAdded": 1770379972674
+        "title": "Terminal Shell Integration",
+        "url": "https://code.visualstudio.com/docs/terminal/shell-integration",
+        "dateAdded": 1771754799490
     },
     {
-        "title": "Extensiones",
-        "url": "chrome://extensions/",
-        "dateAdded": 1771599601858
-    },
-    {
-        "title": "Vamos Crear Nuestro Primer Agente Usando smolagents",
-        "url": "https://huggingface.co/learn/agents-course/es/unit1/tutorial",
-        "dateAdded": 1771608721583
-    },
-    {
-        "title": "Colab Notebooks - Google Drive",
-        "url": "https://drive.google.com/drive/u/1/folders/1GWtiLgZSNN-QG5SEbSrqdxKfHetcgi62",
-        "dateAdded": 1771610015376
+        "title": "127.0.0.1:5000/status",
+        "url": "http://127.0.0.1:5000/status",
+        "dateAdded": 1771755895678
     },
     {
         "title": "AutoAnimate - Add motion to your apps with a single line of code",
@@ -6488,20 +6478,5 @@
         "title": "Biblioteca Digital | Real Academia Española",
         "url": "https://www.rae.es/biblioteca-digital",
         "dateAdded": 1707385310989
-    },
-    {
-        "title": "iAsk Question · React native en español",
-        "url": "https://iask.ai/?mode=question&options[detail_level]=detailed&q=React+native+en+espa%C3%B1ol",
-        "dateAdded": 1725177074546
-    },
-    {
-        "title": "Open WebUI",
-        "url": "http://192.168.1.188:3000/",
-        "dateAdded": 1765536606889
-    },
-    {
-        "title": "Open WebUI CURRO",
-        "url": "http://212.102.49.83:49502/",
-        "dateAdded": 1765558305610
     }
 ]

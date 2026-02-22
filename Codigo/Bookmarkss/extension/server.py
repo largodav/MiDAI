@@ -3,6 +3,7 @@ from flask_cors import CORS
 import json
 import os
 import sys
+from datetime import datetime
 from urllib import request as urlrequest
 from urllib.error import URLError, HTTPError
 
@@ -14,6 +15,25 @@ CORS(app)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 BOOKMARKS_FILE = os.path.join(BASE_DIR, "biblioteca_marcadores.json")
 OLLAMA_SYNC_URL = os.getenv("OLLAMA_SYNC_URL", "http://localhost:6000/recibir_todos")
+
+SERVER_STATE = {
+    "status": "STARTING",
+    "bookmark_count": 0,
+    "updates_received": 0,
+    "last_update": None,
+}
+
+
+def imprimir_estado_server(evento):
+    print(
+        "[EXT-SERVER] "
+        f"evento={evento} | "
+        f"status={SERVER_STATE['status']} | "
+        f"marcadores={SERVER_STATE['bookmark_count']} | "
+        f"updates={SERVER_STATE['updates_received']} | "
+        f"last_update={SERVER_STATE['last_update']}",
+        flush=True,
+    )
 
 
 def reenviar_a_server_ollama(marcadores):
@@ -51,18 +71,43 @@ def recibir_todos():
     with open(BOOKMARKS_FILE, "w", encoding="utf-8") as f:
         json.dump(marcadores, f, ensure_ascii=False, indent=4)
 
+    SERVER_STATE["bookmark_count"] = len(marcadores)
+    SERVER_STATE["updates_received"] += 1
+    SERVER_STATE["last_update"] = datetime.now().isoformat(timespec="seconds")
+
     sync_result = reenviar_a_server_ollama(marcadores)
     if sync_result["ok"]:
-        print(f"🔁 Marcadores reenviados a server_ollama ({OLLAMA_SYNC_URL})")
+        print(f"🔁 Marcadores reenviados a server_ollama ({OLLAMA_SYNC_URL})", flush=True)
     else:
-        print(f"⚠️ No se pudo reenviar a server_ollama: {sync_result['error']}")
+        print(f"⚠️ No se pudo reenviar a server_ollama: {sync_result['error']}", flush=True)
     
-    print(f"✅ ¡Éxito! Se han recibido y guardado {len(marcadores)} marcadores.")
+    print(f"✅ ¡Éxito! Se han recibido y guardado {len(marcadores)} marcadores.", flush=True)
+    imprimir_estado_server("BOOKMARKS_UPDATED")
     return jsonify({
         "status": "recibidos",
         "total": len(marcadores),
+        "server_status": SERVER_STATE,
         "sync_server_ollama": sync_result,
     }), 200
 
+
+@app.route('/status', methods=['GET'])
+def status_server():
+    return jsonify({
+        "server_status": SERVER_STATE,
+        "bookmarks_file": BOOKMARKS_FILE,
+        "ollama_sync_url": OLLAMA_SYNC_URL,
+    }), 200
+
 if __name__ == '__main__':
+    SERVER_STATE["status"] = "RUNNING"
+    if os.path.exists(BOOKMARKS_FILE):
+        try:
+            with open(BOOKMARKS_FILE, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                if isinstance(data, list):
+                    SERVER_STATE["bookmark_count"] = len(data)
+        except (json.JSONDecodeError, OSError):
+            pass
+    imprimir_estado_server("SERVER_START")
     app.run(port=5000)
