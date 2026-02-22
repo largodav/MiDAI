@@ -14,7 +14,7 @@ CORS(app)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 BOOKMARKS_FILE = os.path.join(BASE_DIR, "biblioteca_marcadores.json")
-OLLAMA_SYNC_URL = os.getenv("OLLAMA_SYNC_URL", "http://localhost:6000/recibir_todos")
+OLLAMA_SYNC_URL = os.getenv("OLLAMA_SYNC_URL", "http://localhost:6060/recibir_todos")
 
 SERVER_STATE = {
     "status": "STARTING",
@@ -110,4 +110,4 @@ if __name__ == '__main__':
         except (json.JSONDecodeError, OSError):
             pass
     imprimir_estado_server("SERVER_START")
-    app.run(port=5000)
+    app.run(host='0.0.0.0', port=5000)

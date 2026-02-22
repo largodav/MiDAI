@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 import json
 import os
@@ -13,10 +13,10 @@ CORS(app)
 
 OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434/api/generate")
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.2")
+OLLAMA_WEB_PORT = int(os.getenv("OLLAMA_WEB_PORT", "6060"))
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 BOOKMARKS_FILE = os.path.join(BASE_DIR, "biblioteca_marcadores.json")
 EXTENSION_BOOKMARKS_FILE = os.path.join(BASE_DIR, "extension", "biblioteca_marcadores.json")
-
 
 def cargar_marcadores():
     rutas = [BOOKMARKS_FILE, EXTENSION_BOOKMARKS_FILE]
@@ -75,6 +75,51 @@ def consultar_ollama(prompt, modelo=None):
         return {"ok": False, "error": f"Error inesperado: {str(e)}"}
 
 
+def construir_prompt(pregunta, incluir_marcadores=True):
+    prompt = pregunta
+    marcadores = []
+
+    if incluir_marcadores:
+        marcadores = cargar_marcadores()
+        contexto = json.dumps(marcadores, ensure_ascii=False, indent=2)
+        prompt = (
+            "Usa estos marcadores como contexto para responder. "
+            "Si no alcanzan, dilo claramente.\n\n"
+            f"Marcadores:\n{contexto}\n\n"
+            f"Pregunta: {pregunta}"
+        )
+
+    return prompt, marcadores
+
+
+@app.route('/', methods=['GET'])
+def chat_web():
+    return render_template('chat_modelo.html', model=OLLAMA_MODEL)
+
+
+@app.route('/api/chat', methods=['POST'])
+def api_chat():
+    datos = request.get_json(silent=True) or {}
+    pregunta = datos.get("pregunta", "").strip()
+    modelo = datos.get("modelo")
+    incluir_marcadores = datos.get("incluir_marcadores", True)
+
+    if not pregunta:
+        return jsonify({"error": "Debes enviar el campo 'pregunta'."}), 400
+
+    prompt, marcadores = construir_prompt(pregunta, incluir_marcadores=incluir_marcadores)
+    resultado = consultar_ollama(prompt, modelo=modelo)
+
+    if not resultado["ok"]:
+        return jsonify({"error": resultado["error"]}), 502
+
+    return jsonify({
+        "modelo": modelo or OLLAMA_MODEL,
+        "marcadores_usados": len(marcadores),
+        "respuesta": resultado["respuesta"],
+    }), 200
+
+
 @app.route('/preguntar_ollama', methods=['POST'])
 def preguntar_ollama():
     datos = request.get_json(silent=True) or {}
@@ -85,17 +130,7 @@ def preguntar_ollama():
     if not pregunta:
         return jsonify({"error": "Debes enviar el campo 'pregunta'."}), 400
 
-    prompt = pregunta
-    marcadores = []
-    if incluir_marcadores:
-        marcadores = cargar_marcadores()
-        contexto = json.dumps(marcadores, ensure_ascii=False, indent=2)
-        prompt = (
-            "Usa estos marcadores como contexto para responder. "
-            "Si no alcanzan, dilo claramente.\n\n"
-            f"Marcadores:\n{contexto}\n\n"
-            f"Pregunta: {pregunta}"
-        )
+    prompt, marcadores = construir_prompt(pregunta, incluir_marcadores=incluir_marcadores)
 
     resultado = consultar_ollama(prompt, modelo=modelo)
     if not resultado["ok"]:
@@ -108,5 +143,5 @@ def preguntar_ollama():
     }), 200
 
 if __name__ == '__main__':
-    app.run(port=6000)
+    app.run(host='0.0.0.0', port=OLLAMA_WEB_PORT)
     

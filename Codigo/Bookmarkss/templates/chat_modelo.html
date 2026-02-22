@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat Ollama</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='chat_modelo.css') }}" />
+</head>
+<body>
+    <h2>Chat con Ollama</h2>
+    <div class="card">
+        <div id="messages" class="messages"></div>
+        <div class="row">
+            <textarea id="prompt" placeholder="Escribe tu mensaje..."></textarea>
+            <button id="sendBtn">Enviar</button>
+        </div>
+        <label style="display:block; margin-top:8px;">
+            <input type="checkbox" id="usarMarcadores" checked /> Incluir marcadores como contexto
+        </label>
+        <div class="hint">Modelo por defecto: {{ model }}</div>
+    </div>
+
+    <script src="{{ url_for('static', filename='chat_modelo.js') }}"></script>
+</body>
+</html>

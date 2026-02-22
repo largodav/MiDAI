@@ -14,8 +14,8 @@ else
 fi
 
 echo
-echo "=== Puertos 5000 y 6000 ==="
-ss -ltnp | grep -E ':5000|:6000' || echo "Ningún puerto activo en 5000/6000."
+echo "=== Puertos 5000 y 6060 ==="
+ss -ltnp | grep -E ':5000|:6060' || echo "Ningún puerto activo en 5000/6060."
 
 echo
 echo "=== Últimas líneas de logs ==="

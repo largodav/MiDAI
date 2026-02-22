@@ -26,16 +26,22 @@ PYTHONDONTWRITEBYTECODE=1 PYTHONPYCACHEPREFIX="$PYCACHE_ROOT" nohup python3 "$SE
 PID_EXTENSION=$!
 
 sleep 1
+WSL_IP="$(hostname -I | awk '{print $1}')"
 
 echo "SERVIDORES INICIADOS"
 echo "------SERVIDOR OLLAMA --------------------------------------"
-echo "- server_ollama.py PID: $PID_OLLAMA (http://127.0.0.1:6000)"
+echo "- server_ollama.py PID: $PID_OLLAMA (http://127.0.0.1:6060)"
 echo "------SERVIDOR EXTENSIONES --------------------------------------"
 echo "- extension/server.py PID: $PID_EXTENSION (http://127.0.0.1:5000)"
 echo "------ STATUS Servidor Extensiones  --------------------------------------"
 echo "Se puede consulta en http://127.0.0.1:5000/status"
 echo "Logs: /tmp/server_ollama.log y /tmp/extension_server.log"
 echo "Pycache redirigido a: $PYCACHE_ROOT"
+echo "Chat web (Windows): http://localhost:6060/"
+echo "Chat web (IP WSL): http://$WSL_IP:6060/"
+
+HTTP_CODE_6060="$(curl -sS -m 3 -o /dev/null -w '%{http_code}' http://127.0.0.1:6060/ || echo '000')"
+echo "Health 6060: $HTTP_CODE_6060"
 
 echo
 echo "=== Estado tras arranque ==="
