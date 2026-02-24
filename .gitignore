@@ -1,3 +1,7 @@
 # Ignorar archivos de entorno
 .env
 /recursos 
+/.venv_wsl
+/.venv 
+/.venv3_12
+prueba_ahgentes_gemini.py

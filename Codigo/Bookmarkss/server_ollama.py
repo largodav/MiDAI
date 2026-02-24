@@ -12,7 +12,7 @@ app = Flask(__name__)
 CORS(app)
 
 OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434/api/generate")
-OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.2")
+OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "gpt-oss:20b")
 OLLAMA_WEB_PORT = int(os.getenv("OLLAMA_WEB_PORT", "6060"))
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 BOOKMARKS_FILE = os.path.join(BASE_DIR, "biblioteca_marcadores.json")

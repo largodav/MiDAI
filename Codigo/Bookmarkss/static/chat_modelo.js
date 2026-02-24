@@ -11,6 +11,7 @@ function addMessage(role, text) {
   messages.scrollTop = messages.scrollHeight;
 }
 
+
 async function enviar() {
   const text = prompt.value.trim();
   if (!text) return;
